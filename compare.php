@@ -1,5 +1,21 @@
 <?php
 
+function insertionSort( $ar ){
+	$output = array();
+	for ( $i=1; $i<count($ar); $i++ ){
+		for ( $j=$i; $j>0; $j-- ){
+			if( $ar[$j] > $ar[$j-1]){
+				break;
+			}
+
+			$aux = $ar[$j-1];
+			$ar[$j-1] = $ar[$j];
+			$ar[$j] = $aux;
+		}
+		$output[] = implode(" ", $ar);
+	}
+	return $output;
+}
 
 Class QuickSort extends Model {
 	private $items;
@@ -139,4 +155,3 @@ foreach($ar as &$e){
 
 $quickSort = new QuickSort;
 $ar = $quickSort->sort( $ar );
-
