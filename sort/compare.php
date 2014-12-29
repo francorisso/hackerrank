@@ -1,25 +1,9 @@
 <?php
 
-function insertionSort( $ar ){
-	$output = array();
-	for ( $i=1; $i<count($ar); $i++ ){
-		for ( $j=$i; $j>0; $j-- ){
-			if( $ar[$j] > $ar[$j-1]){
-				break;
-			}
-
-			$aux = $ar[$j-1];
-			$ar[$j-1] = $ar[$j];
-			$ar[$j] = $aux;
-		}
-		$output[] = implode(" ", $ar);
-	}
-	return $output;
-}
-
 Class QuickSort extends Model {
 	private $items;
 	private $items_count;
+	public $swaps = 0;
 
 	public function __construct(){}
 
@@ -60,13 +44,13 @@ Class QuickSort extends Model {
 			$elem = $this->items[$i];
 			if( $elem < $token_val ){				
 				$this->elem_switch($i, $lo_idx++);
+				$this->swaps++;
 			}
 		}
 		
 		$this->elem_switch($token, $lo_idx);
+		$this->swaps++;
 		$token = $lo_idx;
-
-		$this->print_array_nl($this->items);
 
 		$this->_sort($from, $token);
 		$this->_sort($token+1, $to);
@@ -145,13 +129,45 @@ class Model {
 	}
 }
 
+function insertionSort( $ar ){
+	$output = array();
+	$swifts = 0;
+	for ( $i=1; $i<count($ar); $i++ ){
+		for ( $j=$i; $j>0; $j-- ){
+			if( $ar[$j] >= $ar[$j-1]){
+				break;
+			}
+			$swifts++;
+			$aux = $ar[$j-1];
+			$ar[$j-1] = $ar[$j];
+			$ar[$j] = $aux;
+		}
+		$output[] = implode(" ", $ar);
+	}
+	return $swifts;
+}
+
 //process input and call function
 $s = fgets(STDIN);
 $ar = fgets(STDIN);
 $ar = preg_split("/ /",$ar);
-foreach($ar as &$e){
-	$e = intval($e);
+for($i=0; $i<count($ar); $i++){
+	$ar[$i] = (int) $ar[$i];
 }
 
-$quickSort = new QuickSort;
-$ar = $quickSort->sort( $ar );
+$ar2 = array();
+foreach($ar as $e){
+	$ar2[] = $e;
+}
+
+function iquants($array){
+	return insertionSort($array);
+}
+
+function qquants($array){
+	$quickSort = new QuickSort;
+	$quickSort->sort($array);
+
+	return $quickSort->swaps;
+}
+echo iquants($ar) - qquants($ar2);
